@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AProposRouteImport } from './routes/a-propos'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as AvisRouteImport } from './routes/avis'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as MeilleursArticlesRouteImport } from './routes/meilleurs-articles'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +21,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AProposRoute = AProposRouteImport.update({
+  id: '/a-propos',
+  path: '/a-propos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArticlesRoute = ArticlesRouteImport.update({
   id: '/articles',
   path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AvisRoute = AvisRouteImport.update({
+  id: '/avis',
+  path: '/avis',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MeilleursArticlesRoute = MeilleursArticlesRouteImport.update({
@@ -31,31 +49,62 @@ const MeilleursArticlesRoute = MeilleursArticlesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/articles': typeof ArticlesRoute
+  '/avis': typeof AvisRoute
+  '/contact': typeof ContactRoute
   '/meilleurs-articles': typeof MeilleursArticlesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/articles': typeof ArticlesRoute
+  '/avis': typeof AvisRoute
+  '/contact': typeof ContactRoute
   '/meilleurs-articles': typeof MeilleursArticlesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/a-propos': typeof AProposRoute
   '/articles': typeof ArticlesRoute
+  '/avis': typeof AvisRoute
+  '/contact': typeof ContactRoute
   '/meilleurs-articles': typeof MeilleursArticlesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/articles' | '/meilleurs-articles'
+  fullPaths:
+    | '/'
+    | '/a-propos'
+    | '/articles'
+    | '/avis'
+    | '/contact'
+    | '/meilleurs-articles'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/articles' | '/meilleurs-articles'
-  id: '__root__' | '/' | '/articles' | '/meilleurs-articles'
+  to:
+    | '/'
+    | '/a-propos'
+    | '/articles'
+    | '/avis'
+    | '/contact'
+    | '/meilleurs-articles'
+  id:
+    | '__root__'
+    | '/'
+    | '/a-propos'
+    | '/articles'
+    | '/avis'
+    | '/contact'
+    | '/meilleurs-articles'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AProposRoute: typeof AProposRoute
   ArticlesRoute: typeof ArticlesRoute
+  AvisRoute: typeof AvisRoute
+  ContactRoute: typeof ContactRoute
   MeilleursArticlesRoute: typeof MeilleursArticlesRoute
 }
 
@@ -68,11 +117,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/a-propos': {
+      id: '/a-propos'
+      path: '/a-propos'
+      fullPath: '/a-propos'
+      preLoaderRoute: typeof AProposRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/articles': {
       id: '/articles'
       path: '/articles'
       fullPath: '/articles'
       preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/avis': {
+      id: '/avis'
+      path: '/avis'
+      fullPath: '/avis'
+      preLoaderRoute: typeof AvisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/meilleurs-articles': {
@@ -87,7 +157,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AProposRoute: AProposRoute,
   ArticlesRoute: ArticlesRoute,
+  AvisRoute: AvisRoute,
+  ContactRoute: ContactRoute,
   MeilleursArticlesRoute: MeilleursArticlesRoute,
 }
 export const routeTree = rootRouteImport
