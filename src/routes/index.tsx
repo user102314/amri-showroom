@@ -4,6 +4,7 @@ import heroImage from "@/assets/hero.jpg";
 import { PRODUCTS } from "@/data/products";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Reveal } from "@/components/site/Reveal";
+import { BrandLogo } from "@/components/site/BrandLogo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -37,7 +38,7 @@ function Home() {
 
   return (
     <>
-      <section className="relative isolate min-h-[88vh] overflow-hidden">
+      <section className="relative isolate min-h-[calc(100svh-5.25rem)] overflow-hidden">
         <img
           src={heroImage}
           alt="Salon premium du showroom Meuble Amri"
@@ -48,8 +49,12 @@ function Home() {
         <div className="absolute inset-0 bg-plum-gradient opacity-[0.68]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,transparent,rgba(0,0,0,0.55))]" />
 
-        <div className="relative mx-auto flex min-h-[88vh] max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
+        <div className="relative mx-auto flex min-h-[calc(100svh-5.25rem)] max-w-7xl flex-col justify-center px-4 py-24 sm:px-6 lg:px-8">
           <Reveal className="max-w-2xl">
+            <BrandLogo
+              size="hero"
+              className="mb-7 ring-1 ring-primary-foreground/35"
+            />
             <p className="eyebrow text-gold-soft">Showroom · Soukra Ariana</p>
             <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.05] text-primary-foreground sm:text-6xl lg:text-7xl">
               Sublimez votre intérieur avec Meuble Amri

@@ -81,6 +81,11 @@
     font-family: var(--font-sans);
   }
 
+  ::selection {
+    background-color: color-mix(in oklab, var(--mauve) 70%, white);
+    color: white;
+  }
+
   h1,
   h2,
   h3,

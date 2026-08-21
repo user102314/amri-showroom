@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CATEGORIES, PRODUCTS, type Category } from "@/data/products";
+import { PRODUCTS, type Category } from "@/data/products";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Reveal } from "@/components/site/Reveal";
+import { CategoryFilters } from "@/components/site/CategoryFilters";
 
 export const Route = createFileRoute("/meilleurs-articles")({
   head: () => ({
@@ -39,36 +40,23 @@ function BestSellers() {
         </p>
       </Reveal>
 
-      <div className="mt-10 flex flex-wrap gap-2">
-        {[{ id: "all" as const, label: "Tout" }, ...CATEGORIES].map((cat) => (
-          <button
-            key={cat.id}
-            type="button"
-            onClick={() => setFilter(cat.id)}
-            className={`rounded-full border px-5 py-2.5 text-sm font-medium transition-colors ${
-              filter === cat.id
-                ? "border-transparent bg-plum-gradient text-primary-foreground"
-                : "border-border text-muted-foreground hover:bg-secondary hover:text-primary"
-            }`}
-          >
-            {cat.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((product, i) => (
-          <Reveal key={product.slug} delay={i * 70}>
-            <ProductCard product={product} />
-          </Reveal>
-        ))}
+      <div className="mt-10">
+        <CategoryFilters value={filter} onChange={setFilter} />
       </div>
 
       {items.length === 0 ? (
         <p className="mt-16 text-center text-muted-foreground">
           Aucun article dans cette catégorie pour le moment.
         </p>
-      ) : null}
+      ) : (
+        <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((product, i) => (
+            <Reveal key={product.slug} delay={i * 70}>
+              <ProductCard product={product} />
+            </Reveal>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

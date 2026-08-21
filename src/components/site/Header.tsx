@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, Phone, X } from "lucide-react";
-import logo from "@/assets/logo.jpg.asset.json";
+import { BrandLogo } from "@/components/site/BrandLogo";
+import { BRAND } from "@/data/brand";
 
 const NAV = [
   { to: "/", label: "Accueil" },
@@ -14,22 +15,23 @@ const NAV = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-xl">
-      <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2.5 sm:px-6 lg:px-8">
         <Link to="/" className="flex min-w-0 items-center gap-3">
-          <img
-            src={logo.url}
-            alt="Logo Meuble Amri"
-            className="h-11 w-11 shrink-0 rounded-xl object-cover shadow-soft"
-          />
+          <BrandLogo size="md" />
           <span className="min-w-0">
-            <span className="block truncate font-display text-lg font-semibold leading-tight text-foreground">
-              Meuble Amri
+            <span className="block truncate font-display text-lg font-semibold leading-tight text-foreground sm:text-xl">
+              {BRAND.name}
             </span>
             <span className="block truncate text-[0.62rem] uppercase tracking-[0.28em] text-muted-foreground">
-              Meubles & Décoration
+              {BRAND.tagline}
             </span>
           </span>
         </Link>
@@ -47,18 +49,19 @@ export function Header() {
             </Link>
           ))}
           <a
-            href="tel:+21624501437"
+            href={BRAND.phoneHref}
             className="ml-2 inline-flex items-center gap-2 rounded-full bg-plum-gradient px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-soft transition-transform hover:-translate-y-0.5"
           >
             <Phone className="h-4 w-4" />
-            24 501 437
+            {BRAND.phone}
           </a>
         </nav>
 
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          aria-label="Ouvrir le menu"
+          aria-expanded={open}
+          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
           className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-primary lg:hidden"
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -71,7 +74,6 @@ export function Header() {
             <Link
               key={item.to}
               to={item.to}
-              onClick={() => setOpen(false)}
               activeOptions={{ exact: item.to === "/" }}
               activeProps={{ className: "text-primary" }}
               className="block rounded-xl px-3 py-3 text-sm font-medium text-muted-foreground"
@@ -79,6 +81,13 @@ export function Header() {
               {item.label}
             </Link>
           ))}
+          <a
+            href={BRAND.phoneHref}
+            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-plum-gradient px-4 py-3 text-sm font-medium text-primary-foreground"
+          >
+            <Phone className="h-4 w-4" />
+            Appeler {BRAND.phone}
+          </a>
         </nav>
       ) : null}
     </header>

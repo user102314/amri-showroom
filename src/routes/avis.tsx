@@ -1,6 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Star } from "lucide-react";
+import { REVIEW_AVERAGE, REVIEWS } from "@/data/reviews";
 import { Reveal } from "@/components/site/Reveal";
+import { Stars } from "@/components/site/Stars";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export const Route = createFileRoute("/avis")({
   head: () => ({
@@ -21,62 +29,36 @@ export const Route = createFileRoute("/avis")({
   component: Reviews,
 });
 
-const REVIEWS = [
-  {
-    name: "Sonia Ben Salah",
-    city: "Ariana",
-    rating: 5,
-    text: "Pack 2 Soltana livré et monté en une matinée. Le salon est encore plus beau qu'en showroom, les finitions sont impeccables.",
-  },
-  {
-    name: "Mehdi Trabelsi",
-    city: "La Marsa",
-    rating: 5,
-    text: "Accueil très professionnel, on nous a aidés à choisir les dimensions selon le plan de l'appartement. Rapport qualité-prix excellent.",
-  },
-  {
-    name: "Ines Gharbi",
-    city: "Soukra",
-    rating: 4,
-    text: "Chambre Fattouma magnifique, les tiroirs glissent parfaitement. Petit délai supplémentaire sur la coiffeuse mais bien communiqué.",
-  },
-  {
-    name: "Karim Aloui",
-    city: "Tunis",
-    rating: 5,
-    text: "Deuxième achat chez Meuble Amri. Le pack Monica est très confortable et le tissu résiste bien avec des enfants.",
-  },
-  {
-    name: "Rania Chaabane",
-    city: "Ben Arous",
-    rating: 5,
-    text: "Service après-vente réactif : un coussin remplacé sans discussion. C'est rare, je recommande vraiment.",
-  },
-  {
-    name: "Yassine Mabrouk",
-    city: "Nabeul",
-    rating: 5,
-    text: "Livraison jusqu'à Nabeul sans supplément caché. L'équipe a installé la salle à manger et tout emporté.",
-  },
-];
-
-function Stars({ rating }: { rating: number }) {
+function ReviewCard({
+  name,
+  city,
+  rating,
+  text,
+  initials,
+}: (typeof REVIEWS)[number]) {
   return (
-    <div className="flex gap-0.5" aria-label={`${rating} étoiles sur 5`}>
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Star
-          key={i}
-          className={`h-4 w-4 ${i <= rating ? "fill-gold text-gold" : "text-border"}`}
-        />
-      ))}
-    </div>
+    <figure className="flex h-full flex-col rounded-3xl border border-border bg-card p-7 shadow-soft">
+      <Stars rating={rating} />
+      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
+        “{text}”
+      </blockquote>
+      <figcaption className="mt-6 flex items-center gap-3">
+        <span
+          className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-plum-gradient text-sm font-semibold text-primary-foreground"
+          aria-hidden
+        >
+          {initials}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate font-semibold text-foreground">{name}</span>
+          <span className="block text-xs text-muted-foreground">{city}</span>
+        </span>
+      </figcaption>
+    </figure>
   );
 }
 
 function Reviews() {
-  const average =
-    REVIEWS.reduce((sum, r) => sum + r.rating, 0) / REVIEWS.length;
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
       <Reveal>
@@ -88,10 +70,10 @@ function Reviews() {
         <div className="grid items-center gap-8 rounded-[2rem] bg-plum-gradient px-6 py-12 text-primary-foreground sm:grid-cols-[auto_minmax(0,1fr)] sm:px-12">
           <div className="text-center">
             <p className="font-display text-6xl font-semibold text-gold-soft">
-              {average.toFixed(1).replace(".", ",")}
+              {REVIEW_AVERAGE.toFixed(1).replace(".", ",")}
             </p>
             <div className="mt-3 flex justify-center">
-              <Stars rating={Math.round(average)} />
+              <Stars rating={Math.round(REVIEW_AVERAGE)} />
             </div>
             <p className="mt-2 text-xs uppercase tracking-[0.2em] text-primary-foreground/70">
               Note globale
@@ -105,28 +87,26 @@ function Reviews() {
         </div>
       </Reveal>
 
+      <Reveal className="mt-14">
+        <Carousel opts={{ align: "start", loop: true }} className="px-12">
+          <CarouselContent>
+            {REVIEWS.map((review) => (
+              <CarouselItem key={review.name} className="md:basis-1/2 lg:basis-1/3">
+                <ReviewCard {...review} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="border-border bg-card text-primary" />
+          <CarouselNext className="border-border bg-card text-primary" />
+        </Carousel>
+      </Reveal>
+
       <div className="mt-14 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
         {REVIEWS.map((review, i) => (
           <Reveal key={review.name} delay={(i % 3) * 90}>
-            <figure className="h-full rounded-3xl border border-border bg-card p-7 shadow-soft transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-lift">
-              <Stars rating={review.rating} />
-              <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                “{review.text}”
-              </blockquote>
-              <figcaption className="mt-6 flex items-center gap-3">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-plum-gradient font-semibold text-primary-foreground">
-                  {review.name.charAt(0)}
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate font-semibold text-foreground">
-                    {review.name}
-                  </span>
-                  <span className="block text-xs text-muted-foreground">
-                    {review.city}
-                  </span>
-                </span>
-              </figcaption>
-            </figure>
+            <div className="h-full transition-transform duration-500 hover:-translate-y-1.5 hover:shadow-lift">
+              <ReviewCard {...review} />
+            </div>
           </Reveal>
         ))}
       </div>

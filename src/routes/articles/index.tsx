@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CATEGORIES, PRODUCTS, type Category } from "@/data/products";
+import { PRODUCTS, type Category } from "@/data/products";
 import { ProductCard } from "@/components/site/ProductCard";
 import { Reveal } from "@/components/site/Reveal";
+import { CategoryFilters } from "@/components/site/CategoryFilters";
 
-export const Route = createFileRoute("/articles")({
+export const Route = createFileRoute("/articles/")({
   head: () => ({
     meta: [
       { title: "Catalogue complet — Meuble Amri" },
@@ -54,22 +55,7 @@ function Catalogue() {
       </Reveal>
 
       <div className="mt-10 grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-        <div className="flex flex-wrap gap-2">
-          {[{ id: "all" as const, label: "Tout" }, ...CATEGORIES].map((cat) => (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setFilter(cat.id)}
-              className={`rounded-full border px-5 py-2.5 text-sm font-medium transition-colors ${
-                filter === cat.id
-                  ? "border-transparent bg-plum-gradient text-primary-foreground"
-                  : "border-border text-muted-foreground hover:bg-secondary hover:text-primary"
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
+        <CategoryFilters value={filter} onChange={setFilter} />
 
         <select
           value={sort}
@@ -83,13 +69,19 @@ function Catalogue() {
         </select>
       </div>
 
-      <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((product, i) => (
-          <Reveal key={product.slug} delay={(i % 3) * 90}>
-            <ProductCard product={product} />
-          </Reveal>
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <p className="mt-16 text-center text-muted-foreground">
+          Aucun article dans cette catégorie pour le moment.
+        </p>
+      ) : (
+        <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {items.map((product, i) => (
+            <Reveal key={product.slug} delay={(i % 3) * 90}>
+              <ProductCard product={product} />
+            </Reveal>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

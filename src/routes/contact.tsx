@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
 import { Reveal } from "@/components/site/Reveal";
+import { BRAND } from "@/data/brand";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -23,15 +25,24 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
-  const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSent(true);
+    setSending(true);
+    const form = e.currentTarget;
+    window.setTimeout(() => {
+      form.reset();
+      setSending(false);
+      toast.success("Message envoyé", {
+        description:
+          "Merci ! Nous vous recontactons rapidement pour votre projet.",
+      });
+    }, 400);
   };
 
   const field =
-    "w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-ring";
+    "mt-2 w-full rounded-2xl border border-border bg-card px-4 py-3 text-sm outline-none transition-shadow placeholder:text-muted-foreground focus:ring-2 focus:ring-ring";
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
@@ -51,35 +62,48 @@ function Contact() {
             className="space-y-4 rounded-[2rem] border border-border bg-card p-7 shadow-soft"
           >
             <div className="grid gap-4 sm:grid-cols-2">
-              <input required name="nom" placeholder="Nom et prénom" className={field} />
+              <label className="block text-sm font-medium text-foreground">
+                Nom et prénom
+                <input required name="nom" placeholder="Sonia Ben Salah" className={field} />
+              </label>
+              <label className="block text-sm font-medium text-foreground">
+                Adresse e-mail
+                <input
+                  required
+                  type="email"
+                  name="email"
+                  placeholder="vous@email.com"
+                  className={field}
+                />
+              </label>
+            </div>
+            <label className="block text-sm font-medium text-foreground">
+              Téléphone
               <input
                 required
-                type="email"
-                name="email"
-                placeholder="Adresse e-mail"
+                name="telephone"
+                type="tel"
+                placeholder="24 501 437"
                 className={field}
               />
-            </div>
-            <input name="telephone" placeholder="Téléphone" className={field} />
-            <textarea
-              required
-              name="message"
-              rows={6}
-              placeholder="Votre message"
-              className={field}
-            />
+            </label>
+            <label className="block text-sm font-medium text-foreground">
+              Message
+              <textarea
+                required
+                name="message"
+                rows={6}
+                placeholder="Parlez-nous de votre intérieur, des dimensions, du pack qui vous intéresse…"
+                className={field}
+              />
+            </label>
             <button
               type="submit"
-              className="w-full rounded-full bg-plum-gradient px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-soft transition-transform hover:-translate-y-0.5"
+              disabled={sending}
+              className="w-full rounded-full bg-plum-gradient px-7 py-4 text-sm font-semibold uppercase tracking-[0.14em] text-primary-foreground shadow-soft transition-transform hover:-translate-y-0.5 disabled:opacity-70"
             >
-              Envoyer le message
+              {sending ? "Envoi…" : "Envoyer le message"}
             </button>
-            {sent ? (
-              <p className="text-center text-sm text-primary">
-                Merci ! Votre message a bien été pris en compte, nous vous
-                recontactons rapidement.
-              </p>
-            ) : null}
           </form>
         </Reveal>
 
@@ -89,22 +113,22 @@ function Contact() {
             <ul className="mt-5 space-y-4 text-sm text-muted-foreground">
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-mauve" />
-                Soukra Ariana, Avenue l'UMA, en face de Jumpark
+                {BRAND.address}
               </li>
               <li className="flex gap-3">
                 <Phone className="h-5 w-5 shrink-0 text-mauve" />
-                <a href="tel:+21624501437" className="hover:text-primary">24 501 437</a>
+                <a href={BRAND.phoneHref} className="hover:text-primary">{BRAND.phone}</a>
               </li>
               <li className="flex gap-3">
                 <Mail className="h-5 w-5 shrink-0 text-mauve" />
-                <a href="mailto:contact@meubleamri.tn" className="hover:text-primary">
-                  contact@meubleamri.tn
+                <a href={BRAND.emailHref} className="hover:text-primary">
+                  {BRAND.email}
                 </a>
               </li>
             </ul>
             <div className="mt-6 flex gap-3">
               <a
-                href="https://www.facebook.com/profile.php?id=61550231374337"
+                href={BRAND.facebook}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Facebook Meuble Amri"
@@ -113,7 +137,7 @@ function Contact() {
                 <Facebook className="h-5 w-5" />
               </a>
               <a
-                href="https://www.instagram.com/"
+                href={BRAND.instagram}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Instagram Meuble Amri"
@@ -127,7 +151,7 @@ function Contact() {
           <div className="overflow-hidden rounded-[2rem] border border-border shadow-soft">
             <iframe
               title="Localisation du showroom Meuble Amri"
-              src="https://www.google.com/maps?q=La%20Soukra%20Ariana%20Avenue%20de%20l'UMA%20Jumpark&output=embed"
+              src={BRAND.mapsEmbed}
               loading="lazy"
               className="h-[320px] w-full border-0"
               referrerPolicy="no-referrer-when-downgrade"

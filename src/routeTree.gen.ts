@@ -11,10 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AProposRouteImport } from './routes/a-propos'
-import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as AvisRouteImport } from './routes/avis'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as MeilleursArticlesRouteImport } from './routes/meilleurs-articles'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
+import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
+import { Route as ArticlesSlugRouteImport } from './routes/articles/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,11 +26,6 @@ const IndexRoute = IndexRouteImport.update({
 const AProposRoute = AProposRouteImport.update({
   id: '/a-propos',
   path: '/a-propos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ArticlesRoute = ArticlesRouteImport.update({
-  id: '/articles',
-  path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AvisRoute = AvisRouteImport.update({
@@ -46,66 +43,95 @@ const MeilleursArticlesRoute = MeilleursArticlesRouteImport.update({
   path: '/meilleurs-articles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/articles/$slug',
+  path: '/articles/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
-  '/articles': typeof ArticlesRoute
   '/avis': typeof AvisRoute
   '/contact': typeof ContactRoute
   '/meilleurs-articles': typeof MeilleursArticlesRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
-  '/articles': typeof ArticlesRoute
   '/avis': typeof AvisRoute
   '/contact': typeof ContactRoute
   '/meilleurs-articles': typeof MeilleursArticlesRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles': typeof ArticlesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/a-propos': typeof AProposRoute
-  '/articles': typeof ArticlesRoute
   '/avis': typeof AvisRoute
   '/contact': typeof ContactRoute
   '/meilleurs-articles': typeof MeilleursArticlesRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
+  '/articles/': typeof ArticlesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/a-propos'
-    | '/articles'
     | '/avis'
     | '/contact'
     | '/meilleurs-articles'
+    | '/mentions-legales'
+    | '/articles/$slug'
+    | '/articles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/a-propos'
-    | '/articles'
     | '/avis'
     | '/contact'
     | '/meilleurs-articles'
+    | '/mentions-legales'
+    | '/articles/$slug'
+    | '/articles'
   id:
     | '__root__'
     | '/'
     | '/a-propos'
-    | '/articles'
     | '/avis'
     | '/contact'
     | '/meilleurs-articles'
+    | '/mentions-legales'
+    | '/articles/$slug'
+    | '/articles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AProposRoute: typeof AProposRoute
-  ArticlesRoute: typeof ArticlesRoute
   AvisRoute: typeof AvisRoute
   ContactRoute: typeof ContactRoute
   MeilleursArticlesRoute: typeof MeilleursArticlesRoute
+  MentionsLegalesRoute: typeof MentionsLegalesRoute
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,13 +148,6 @@ declare module '@tanstack/react-router' {
       path: '/a-propos'
       fullPath: '/a-propos'
       preLoaderRoute: typeof AProposRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/articles': {
-      id: '/articles'
-      path: '/articles'
-      fullPath: '/articles'
-      preLoaderRoute: typeof ArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/avis': {
@@ -152,16 +171,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MeilleursArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles/'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/articles/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AProposRoute: AProposRoute,
-  ArticlesRoute: ArticlesRoute,
   AvisRoute: AvisRoute,
   ContactRoute: ContactRoute,
   MeilleursArticlesRoute: MeilleursArticlesRoute,
+  MentionsLegalesRoute: MentionsLegalesRoute,
+  ArticlesSlugRoute: ArticlesSlugRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
